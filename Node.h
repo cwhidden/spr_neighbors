@@ -2102,6 +2102,48 @@ int get_name_num() {
 }
 
 
+// recursive helper function for normalize_order()
+int normalize_order_hlpr() {
+	list<Node *>::iterator c;
+	map<int, Node *> ordered_children = map<int, Node *>();
+	int min_descendant = INT_MAX;
+	// order subtrees
+	for(c = get_children().begin(); c != get_children().end(); c++) {
+		int c_min_descendant = (*c)->normalize_order_hlpr();
+		ordered_children.insert(make_pair(c_min_descendant, *c));
+		if (c_min_descendant < min_descendant) {
+			min_descendant = c_min_descendant;
+		}
+	}
+	// cut all children
+	while(!get_children().empty()) {
+		(*(get_children().begin()))->cut_parent();
+	}
+	
+	// re-add in correct order
+	while(!ordered_children.empty()) {
+		pair<int, Node *> next = *(ordered_children.begin());
+		add_child(next.second);
+		ordered_children.erase(next.first);
+	}
+
+	if (is_leaf()) {
+		min_descendant = get_name_num();
+	}
+	return min_descendant;
+}
+
+// normalize branching order by smallest descendant leaf
+// returns smallest descendant leaf
+void normalize_order() {
+	// normalize order
+	normalize_order_hlpr();
+	// new preorder numbering
+	preorder_number();
+	edge_preorder_interval();
+}
+
+
 };
 
 // function prototypes
@@ -2367,6 +2409,7 @@ void reroot_safe(Node **n, Node *new_lc) {
 	(*n)->preorder_number();
 	(*n)->edge_preorder_interval();
 }
+
 
 
 
