@@ -46,11 +46,19 @@ void add_neighbor(Node *n, Node *new_sibling, Node *root, list<Node *> &neighbor
 // MAIN
 
 int main(int argc, char *argv[]) {
-
+	int max_args = argc-1;
 	while (argc > 1) {
 		char *arg = argv[--argc];
 
-		if (strcmp(arg, "--help") == 0) {
+		if (strcmp(arg, "-k") == 0) {
+			if (max_args > argc) {
+				char *arg2 = argv[argc+1];
+				if (arg2[0] != '-') {
+					DIAMETER = atoi(arg2);
+				}
+			}
+		}
+		else if (strcmp(arg, "--help") == 0) {
 			cout << USAGE;
 			return 0;
 		}
@@ -98,14 +106,17 @@ int main(int argc, char *argv[]) {
 		break;
 	}
 
+	// TODO: vector of neighbourhood distances?
 	// known trees
-	set<string> trees = set<string>();
+	set<string> known_trees = set<string>();
 
 	// new trees this round
 	list<Node *> new_trees = list<Node *>();
+	list<Node *> next_trees = list<Node *>();
+
 
 	// first tree
-	trees.insert(T->str_subtree());
+	known_trees.insert(T->str_subtree());
 	new_trees.push_back(T);
 	
 	// generate a given neighborhood size (command line arg or distance-1)
@@ -120,9 +131,36 @@ int main(int argc, char *argv[]) {
 			list<Node*>::iterator t;
 			cout << "n_size: " << neighbors.size() << endl;
 			for(t = neighbors.begin(); t != neighbors.end(); t++) {
-				cout << (*t)->str_subtree() << endl;
+				// check if known
+				string name = (*t)->str_subtree();
+				set<string>::iterator x = known_trees.find(name);
+				if (x == known_trees.end()) {
+					// add to known trees and next_trees
+					known_trees.insert(name);
+					next_trees.push_back(*t);
+					cout << "NEW  ";
+					cout << (*t)->str_subtree() << endl;
+				}
+				else {
+					// delete and ignore
+					cout << "OLD  ";
+					cout << (*t)->str_subtree() << endl;
+					(*t)->delete_tree();
+				}
+
 			}
+			// cleanup
+			tree->delete_tree();
 		}
+		new_trees = next_trees;
+		next_trees = list<Node *>();
+	}
+	// cleanup
+//	cout << new_trees.size() << endl;
+	while(!new_trees.empty()) {
+		Node *tree = new_trees.front();
+		new_trees.pop_front();
+		tree->delete_tree();
 	}
 	
 	// output? just the trees? a graph?
@@ -130,9 +168,6 @@ int main(int argc, char *argv[]) {
 	
 	// later, allow a pair and compute the k-tube candidates
 	
-	// cleanup
-	T->delete_tree();
-
 }
 
 // get a list of a trees neighbors
