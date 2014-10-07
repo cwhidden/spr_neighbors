@@ -30,6 +30,7 @@ along with rspr.  If not, see <http://www.gnu.org/licenses/>.
 
 *******************************************************************************/
 
+#ifndef RSPR
 #define RSPR
 
 //#define DEBUG 1
@@ -4798,3 +4799,4 @@ void strip_trailing_whitespace(string &str) {
 	str.erase(end_pos, str.size()-end_pos);
 }
 
+#endif
