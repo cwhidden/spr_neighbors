@@ -30,6 +30,7 @@ using namespace std;
 // OPTIONS
 
 int DIAMETER = 1;
+bool SIZE_ONLY = false;
 
 // USAGE
 string USAGE =
@@ -50,7 +51,10 @@ int main(int argc, char *argv[]) {
 	while (argc > 1) {
 		char *arg = argv[--argc];
 
-		if (strcmp(arg, "-k") == 0) {
+		if (strcmp(arg, "--size_only") == 0) {
+			SIZE_ONLY = true;
+		}
+		else if (strcmp(arg, "-k") == 0) {
 			if (max_args > argc) {
 				char *arg2 = argv[argc+1];
 				if (arg2[0] != '-') {
@@ -93,15 +97,17 @@ int main(int argc, char *argv[]) {
 		T->preorder_number();
 		T->edge_preorder_interval();
 
-		cout << T->str_subtree() << endl;
+//		cout << T->str_subtree() << endl;
 		// convert to integer labels
 		T->labels_to_numbers(&label_map, &reverse_label_map);
 
-		cout << T->str_subtree() << endl;
+//		cout << T->str_subtree() << endl;
 
 		T->normalize_order();
 
-		cout << T->str_subtree() << endl;
+//		cout << T->str_subtree() << endl;
+
+//		cout << endl;
 
 		break;
 	}
@@ -126,10 +132,10 @@ int main(int argc, char *argv[]) {
 			Node *tree = new_trees.front();
 			new_trees.pop_front();
 
-			cout << "current_tree: " << tree->str_subtree() << endl;
+//			cout << "current_tree: " << tree->str_subtree() << endl;
 			list<Node *> neighbors = get_neighbors(tree);
 			list<Node*>::iterator t;
-			cout << "n_size: " << neighbors.size() << endl;
+//			cout << "n_size: " << neighbors.size() << endl;
 			for(t = neighbors.begin(); t != neighbors.end(); t++) {
 				// check if known
 				string name = (*t)->str_subtree();
@@ -138,13 +144,13 @@ int main(int argc, char *argv[]) {
 					// add to known trees and next_trees
 					known_trees.insert(name);
 					next_trees.push_back(*t);
-					cout << "NEW  ";
-					cout << (*t)->str_subtree() << endl;
+//					cout << "NEW  ";
+//					cout << (*t)->str_subtree() << endl;
 				}
 				else {
 					// delete and ignore
-					cout << "OLD  ";
-					cout << (*t)->str_subtree() << endl;
+//					cout << "OLD  ";
+//					cout << (*t)->str_subtree() << endl;
 					(*t)->delete_tree();
 				}
 
@@ -161,6 +167,21 @@ int main(int argc, char *argv[]) {
 		Node *tree = new_trees.front();
 		new_trees.pop_front();
 		tree->delete_tree();
+	}
+
+	// output
+	if (SIZE_ONLY) {
+		cout << known_trees.size() << endl;
+	}
+	else {
+		set<string>::iterator t;
+		for(t = known_trees.begin(); t != known_trees.end(); t++) {
+			// hacky - do this better if necessary
+			Node *T = build_tree(*t);
+			T->numbers_to_labels(&reverse_label_map);
+			cout << T->str_subtree() << endl;
+			T->delete_tree();
+		}
 	}
 	
 	// output? just the trees? a graph?
