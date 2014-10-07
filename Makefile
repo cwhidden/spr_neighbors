@@ -8,11 +8,14 @@ BOOST_ANY=-L/lib/libboost*
 LFLAGS=#$(BOOST_GRAPH) $(BOOST_ANY)
 DEBUGFLAGS=-g -O0 -std=c++0x
 PROFILEFLAGS=-pg
-OBJS=spr_neighbors
+OBJS=spr_neighbors spr_dense_graph
 all: $(OBJS)
 
 spr_neighbors: spr_neighbors.cpp *.h
 	$(CC) $(CFLAGS) -o spr_neighbors spr_neighbors.cpp
+
+spr_dense_graph: spr_dense_graph.cpp *.h
+	$(CC) $(CFLAGS) -o spr_dense_graph spr_dense_graph.cpp
 
 .PHONY: debug
 .PHONY: profile
