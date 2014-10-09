@@ -8,7 +8,7 @@ BOOST_ANY=-L/lib/libboost*
 LFLAGS=#$(BOOST_GRAPH) $(BOOST_ANY)
 DEBUGFLAGS=-g -O0 -std=c++0x
 PROFILEFLAGS=-pg
-OBJS=spr_neighbors spr_dense_graph normalize
+OBJS=spr_neighbors spr_dense_graph normalize 1_tube
 all: $(OBJS)
 
 spr_neighbors: spr_neighbors.cpp *.h
@@ -19,6 +19,9 @@ spr_dense_graph: spr_dense_graph.cpp *.h
 
 normalize: normalize.cpp *.h
 	$(CC) $(CFLAGS) -o normalize normalize.cpp
+
+1_tube: 1_tube.cpp *.h
+	$(CC) $(CFLAGS) -o 1_tube 1_tube.cpp
 
 .PHONY: debug
 .PHONY: profile
