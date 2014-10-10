@@ -7,17 +7,17 @@
 using namespace std;
 using namespace boost;
 
+//#define DEBUG 0
+
 typedef boost::adjacency_list
 < listS, vecS, undirectedS, no_property, no_property>
 spr_graph;
 
-
-
 int main(int argc, char **argv) {
-
 	// T1, T2, k as arguments
 	if (argc < 4) {
 		cout << "usage: 1_tube.cpp <k> <T1> <T2> < adjacency_list" << endl;
+		exit(0);
 	}
 	
 	int k = atoi(argv[1]);
@@ -81,7 +81,11 @@ int main(int argc, char **argv) {
 	// for each T1 neighbor
 	boost::tie(vi, vend) = adjacent_vertices(T1, G);
 	while(vi != vend) {
-		cout << *vi << endl;
+		#ifdef DEBUG
+			cout << *vi << endl;
+			cout << "\t";
+			int num_found = 0;
+		#endif
 
 		// found list to avoid duplicates
 		vector<bool> found = vector<bool>(num_vertices(G));
@@ -107,7 +111,13 @@ int main(int argc, char **argv) {
 			backtrack.pop_front();
 			// put in k_tube
 			k_tube[vk] = true;
-			found[vk] = true;
+			#ifdef DEBUG
+				if (num_found > 0) {
+					cout << ", ";
+				}
+				num_found++;
+				cout << vk;
+			#endif
 
 			// get neighbors that are closer to vi but have not been seen yet
 			boost::tie(vj, vjend) = adjacent_vertices(vk, G);
@@ -118,17 +128,20 @@ int main(int argc, char **argv) {
 				}
 				vj++;
 			}
-			
 		}
-			
 		vi++;
+		#ifdef DEBUG
+		cout << endl;
+		#endif
 	}
 	
 	// output sorted list of nums in k-tube
 	spr_graph::vertex_iterator vl, vlend;
 	boost::tie(vl, vlend) = vertices(G);
 	while (vl != vlend) {
-		cout << *vl << ": " << k_tube[*vl] << endl;
+		if (k_tube[*vl]) {
+			cout << *vl << endl;
+		}
 		vl++;
 	}
 }
