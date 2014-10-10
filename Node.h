@@ -2143,6 +2143,48 @@ void normalize_order() {
 	edge_preorder_interval();
 }
 
+// recursive helper function for normalize_order()
+string normalize_order_hlpr(map<int, string> *reverse_label_map) {
+	list<Node *>::iterator c;
+	map<string, Node *> ordered_children = map<string, Node *>();
+	string min_descendant = "";
+	// order subtrees
+	for(c = get_children().begin(); c != get_children().end(); c++) {
+		string c_min_descendant = (*c)->normalize_order_hlpr(reverse_label_map);
+		ordered_children.insert(make_pair(c_min_descendant, *c));
+		if (min_descendant == "" || c_min_descendant < min_descendant) {
+			min_descendant = c_min_descendant;
+		}
+	}
+	// cut all children
+	while(!get_children().empty()) {
+		(*(get_children().begin()))->cut_parent();
+	}
+	
+	// re-add in correct order
+	while(!ordered_children.empty()) {
+		pair<string, Node *> next = *(ordered_children.begin());
+		add_child(next.second);
+		ordered_children.erase(next.first);
+	}
+
+	if (is_leaf()) {
+		min_descendant = get_name();
+	}
+	return min_descendant;
+}
+
+// normalize branching order by smallest descendant leaf
+// returns smallest descendant leaf
+void normalize_order(map<int, string> *reverse_label_map) {
+	// normalize order
+	normalize_order_hlpr(reverse_label_map);
+	// new preorder numbering
+	preorder_number();
+	edge_preorder_interval();
+}
+
+
 
 };
 
