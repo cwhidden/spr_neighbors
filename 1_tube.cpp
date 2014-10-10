@@ -8,8 +8,9 @@ using namespace std;
 using namespace boost;
 
 //#define DEBUG 0
+bool OUTPUT_EDGES = false;
 
-typedef boost::adjacency_list
+typedef adjacency_list
 < listS, vecS, undirectedS, no_property, no_property>
 spr_graph;
 
@@ -18,6 +19,14 @@ int main(int argc, char **argv) {
 	if (argc < 4) {
 		cout << "usage: 1_tube.cpp <k> <T1> <T2> < adjacency_list" << endl;
 		exit(0);
+	}
+	int max_args = argc-1;
+	while (argc > 4) {
+		char *arg = argv[--argc];
+		if (strcmp(arg, "-output_edges") == 0) {
+			OUTPUT_EDGES = true;
+		}
+		
 	}
 	
 	int k = atoi(argv[1]);
@@ -135,13 +144,45 @@ int main(int argc, char **argv) {
 		#endif
 	}
 	
-	// output sorted list of nums in k-tube
-	spr_graph::vertex_iterator vl, vlend;
-	boost::tie(vl, vlend) = vertices(G);
-	while (vl != vlend) {
-		if (k_tube[*vl]) {
-			cout << *vl << endl;
+	if (!OUTPUT_EDGES) {
+		// output sorted list of nums in k-tube
+		spr_graph::vertex_iterator vl, vlend;
+		boost::tie(vl, vlend) = vertices(G);
+		while (vl != vlend) {
+			if (k_tube[*vl]) {
+				cout << *vl << endl;
+			}
+			vl++;
 		}
-		vl++;
+	}
+	else {
+		// filter the k_tube
+		struct in_k_tube {
+			in_k_tube() { }
+			in_k_tube(vector<bool> &k_tube) : b_in_k_tube(k_tube) { }
+			bool operator()(const int& v) const {
+				return b_in_k_tube[v];
+			}
+			vector<bool> b_in_k_tube;
+		};
+
+		typedef filtered_graph<spr_graph, boost::keep_all, in_k_tube> k_tube_graph;
+		k_tube_graph FG(G, boost::keep_all(), in_k_tube(k_tube));
+
+		// output the k_tube edges
+		k_tube_graph::edge_iterator ei, eiend;
+		boost::tie(ei, eiend) = edges(FG);
+		while(ei != eiend) {
+			int s = source(*ei, FG);
+			int t = target(*ei, FG);
+			if (s < t) {
+				cout << s << "," << t << endl;
+			}
+			else {
+				cout << t << "," << s << endl;
+			}
+			ei++;
+		}
+		
 	}
 }

@@ -29,6 +29,7 @@ normalize: normalize.cpp *.h
 
 debug:
 	$(CC) $(LFLAGS) $(DEBUGFLAGS) -o spr_neighbors spr_neighbors.cpp
+	$(CC) $(LFLAGS) $(DEBUGFLAGS) -o 1_tube 1_tube.cpp
 profile:
 	$(CC) $(LFLAGS) $(DEBUGFLAGS) $(PROFILEFLAGS) -o spr_neighbors spr_neighbors.cpp
 test:
