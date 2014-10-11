@@ -8,7 +8,12 @@ BOOST_ANY=-L/lib/libboost*
 LFLAGS=#$(BOOST_GRAPH) $(BOOST_ANY)
 DEBUGFLAGS=-g -O0 -std=c++0x
 PROFILEFLAGS=-pg
-OBJS=spr_neighbors spr_dense_graph normalize 1_tube
+OBJS=spr_neighbors\
+		 spr_dense_graph\
+		 normalize\
+		 1_tube\
+		 adjacency_list_to_graphviz\
+		 ColorGradientTest
 all: $(OBJS)
 
 spr_neighbors: spr_neighbors.cpp *.h
@@ -22,6 +27,12 @@ normalize: normalize.cpp *.h
 
 1_tube: 1_tube.cpp *.h
 	$(CC) $(CFLAGS) -o 1_tube 1_tube.cpp
+
+adjacency_list_to_graphviz: adjacency_list_to_graphviz.cpp *.h
+	$(CC) $(CFLAGS) -o adjacency_list_to_graphviz adjacency_list_to_graphviz.cpp
+
+ColorGradientTest: ColorGradientTest.cpp *.h
+	$(CC) $(CFLAGS) -o ColorGradientTest ColorGradientTest.cpp
 
 .PHONY: debug
 .PHONY: profile
