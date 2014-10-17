@@ -13,7 +13,9 @@ OBJS=spr_neighbors\
 		 normalize\
 		 1_tube\
 		 adjacency_list_to_graphviz\
-		 ColorGradientTest
+		 ColorGradientTest\
+		 select_trees\
+		 select_edges
 all: $(OBJS)
 
 spr_neighbors: spr_neighbors.cpp *.h
@@ -33,6 +35,12 @@ adjacency_list_to_graphviz: adjacency_list_to_graphviz.cpp *.h
 
 ColorGradientTest: ColorGradientTest.cpp *.h
 	$(CC) $(CFLAGS) -o ColorGradientTest ColorGradientTest.cpp
+
+select_trees: select_trees.cpp *.h
+	$(CC) $(CFLAGS) -o select_trees select_trees.cpp
+
+select_edges: select_edges.cpp *.h
+	$(CC) $(CFLAGS) -o select_edges select_edges.cpp
 
 .PHONY: debug
 .PHONY: profile
