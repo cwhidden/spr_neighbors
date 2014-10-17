@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
 		// normalize tree and insert into map
 		Node *T = build_tree(T_line);
 		T->labels_to_numbers(&label_map, &reverse_label_map);
-		T->normalize_order();
+		T->normalize_order(&reverse_label_map);
 		trees.insert(make_pair(T->str_subtree(),num_trees));
 		num_trees++;
 	}

@@ -2169,7 +2169,10 @@ string normalize_order_hlpr(map<int, string> *reverse_label_map) {
 	}
 
 	if (is_leaf()) {
-		min_descendant = get_name();
+		string name = get_name();
+		int num = atoi(name.c_str());
+		map<int, string>::iterator i = reverse_label_map->find(num);
+		min_descendant = i->second;
 	}
 	return min_descendant;
 }
