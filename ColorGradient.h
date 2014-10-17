@@ -25,7 +25,7 @@ private:
  
 public:
   //-- Default constructor:
-  ColorGradient()  {  createDefaultHeatMapGradient();  }
+  ColorGradient()  { }
  
   //-- Inserts a new color point into its correct position:
   void addColorPoint(float red, float green, float blue, float value)
@@ -55,6 +55,12 @@ public:
     color.clear();
     color.push_back(ColorPoint(1, 1, 1,   0.0f));      // White
     color.push_back(ColorPoint(0, 0, 1,   1.0f));      // Blue
+	}
+
+	void createRu() {
+    color.clear();
+    color.push_back(ColorPoint(1, 1, 1,   0.0f));      // White
+    color.push_back(ColorPoint(1, 0, 0,   1.0f));      // Red
 	}
  
   //-- Inputs a (value) between 0 and 1 and outputs the (red), (green) and (blue)
@@ -89,6 +95,7 @@ public:
 		stringstream ss;
 		ss << hex << setfill('0');
 		getColorAtValue(value, r, g, b);
+		ss << "#";
 		ss << setw(2) << static_cast<unsigned>(r*255);
 		ss << setw(2) << static_cast<unsigned>(g*255);
 		ss << setw(2) << static_cast<unsigned>(b*255);
