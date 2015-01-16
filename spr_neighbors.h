@@ -17,16 +17,9 @@
 #include <algorithm>
 #include <list>
 #include <time.h>
-#include "rspr.h"
 
 #include "Forest.h"
-#include "ClusterForest.h"
 #include "LCA.h"
-#include "ClusterInstance.h"
-#include "UndoMachine.h"
-#include "lgt.h"
-#include "sparse_counts.h"
-#include "node_glom.h"
 
 using namespace std;
 

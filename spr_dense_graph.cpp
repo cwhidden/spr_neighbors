@@ -25,10 +25,12 @@
 #include "sparse_counts.h"
 #include "node_glom.h"
 #include "spr_neighbors.h"
+#include "nni_neighbors.h"
 
 using namespace std;
 
 // OPTIONS
+bool NNI_ONLY = false;
 
 // USAGE
 string USAGE =
@@ -41,6 +43,9 @@ int main(int argc, char *argv[]) {
 	while (argc > 1) {
 		char *arg = argv[--argc];
 
+		if (strcmp(arg, "--nni") == 0) {
+			NNI_ONLY = true;
+		}
 		if (strcmp(arg, "--help") == 0) {
 			cout << USAGE;
 			return 0;
@@ -81,7 +86,13 @@ int main(int argc, char *argv[]) {
 		Node *T = build_tree(t->first);
 		int num = t->second;
 //		cout << num << ": " << T->str_subtree() << endl;
-		list<Node *> neighbors = get_neighbors(T);
+		list<Node *> neighbors;
+		if (NNI_ONLY) {
+			neighbors = get_nni_neighbors(T);
+		}
+		else {
+			neighbors = get_neighbors(T);
+		}
 		list<Node *>::iterator n;
 		for(n = neighbors.begin(); n != neighbors.end(); n++) {
 			string name2 = (*n)->str_subtree();

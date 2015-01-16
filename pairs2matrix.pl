@@ -1,4 +1,4 @@
-my @m = ();
+#!/usr/bin/perl
 
 my $HEADER = 0;
 

@@ -14,17 +14,11 @@
 #include <algorithm>
 #include <list>
 #include <time.h>
-#include "rspr.h"
 
 #include "Forest.h"
-#include "ClusterForest.h"
 #include "LCA.h"
-#include "ClusterInstance.h"
-#include "UndoMachine.h"
-#include "lgt.h"
-#include "sparse_counts.h"
-#include "node_glom.h"
 #include "spr_neighbors.h"
+#include "nni_neighbors.h"
 
 using namespace std;
 
@@ -32,6 +26,7 @@ using namespace std;
 
 int DIAMETER = 1;
 bool SIZE_ONLY = false;
+bool NNI_ONLY = false;
 
 // USAGE
 string USAGE =
@@ -56,6 +51,9 @@ int main(int argc, char *argv[]) {
 					DIAMETER = atoi(arg2);
 				}
 			}
+		}
+		else if (strcmp(arg, "--nni") == 0) {
+			NNI_ONLY = true;
 		}
 		else if (strcmp(arg, "--help") == 0) {
 			cout << USAGE;
@@ -128,9 +126,15 @@ int main(int argc, char *argv[]) {
 			new_trees.pop_front();
 
 //			cout << "current_tree: " << tree->str_subtree() << endl;
-			list<Node *> neighbors = get_neighbors(tree, known_trees);
+			list<Node *> neighbors;
+			if (NNI_ONLY) {
+				neighbors = get_nni_neighbors(tree, known_trees);
+			}
+			else {
+				neighbors = get_neighbors(tree, known_trees);
+			}
 			list<Node*>::iterator t;
-//			cout << "n_size: " << neighbors.size() << endl;
+			//cout << "n_size: " << neighbors.size() << endl;
 			for(t = neighbors.begin(); t != neighbors.end(); t++) {
 				// add to known trees and next_trees
 				string name = (*t)->str_subtree();
