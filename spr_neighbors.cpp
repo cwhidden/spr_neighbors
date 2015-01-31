@@ -27,6 +27,7 @@ using namespace std;
 int DIAMETER = 1;
 bool SIZE_ONLY = false;
 bool NNI_ONLY = false;
+bool IGNORE_ORIGINAL = false;
 
 // USAGE
 string USAGE =
@@ -43,6 +44,9 @@ int main(int argc, char *argv[]) {
 
 		if (strcmp(arg, "--size_only") == 0) {
 			SIZE_ONLY = true;
+		}
+		else if (strcmp(arg, "--ignore_original") == 0) {
+			IGNORE_ORIGINAL = true;
 		}
 		else if (strcmp(arg, "-k") == 0) {
 			if (max_args > argc) {
@@ -116,6 +120,7 @@ int main(int argc, char *argv[]) {
 
 	// first tree
 	known_trees.insert(T->str_subtree());
+	string T_str = T->str_subtree();
 	new_trees.push_back(T);
 	
 	// generate a given neighborhood size (command line arg or distance-1)
@@ -147,13 +152,18 @@ int main(int argc, char *argv[]) {
 		new_trees = next_trees;
 		next_trees = list<Node *>();
 	}
+
+	if (IGNORE_ORIGINAL) {
+		known_trees.erase(T_str);
+	}
+
 	// cleanup
-//	cout << new_trees.size() << endl;
 	while(!new_trees.empty()) {
 		Node *tree = new_trees.front();
 		new_trees.pop_front();
 		tree->delete_tree();
 	}
+
 
 	// output
 	if (SIZE_ONLY) {
@@ -174,5 +184,5 @@ int main(int argc, char *argv[]) {
 	// just the trees for now
 	
 	// later, allow a pair and compute the k-tube candidates
-	
+
 }
