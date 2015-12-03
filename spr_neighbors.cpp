@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 	// label maps to allow string labels
 	map<string, int> label_map= map<string, int>();
 	map<int, string> reverse_label_map = map<int, string>();
-	
+
 	// start tree
 	Node *T;
 	string name = "";
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 	known_trees.insert(T->str_subtree());
 	string T_str = T->str_subtree();
 	new_trees.push_back(T);
-	
+
 	// generate a given neighborhood size (command line arg or distance-1)
 	for (int i = 1; i <= DIAMETER; i++) {
 		list<Node *> found_trees = list<Node *>();
@@ -175,14 +175,14 @@ int main(int argc, char *argv[]) {
 			// hacky - do this better if necessary
 			Node *T = build_tree(*t);
 			T->numbers_to_labels(&reverse_label_map);
-			cout << T->str_subtree() << endl;
+			cout << T->str_subtree() << ";" << endl;
 			T->delete_tree();
 		}
 	}
-	
+
 	// output? just the trees? a graph?
 	// just the trees for now
-	
+
 	// later, allow a pair and compute the k-tube candidates
 
 }
